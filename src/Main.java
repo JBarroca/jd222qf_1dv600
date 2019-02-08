@@ -1,6 +1,6 @@
 public class Main {
   public static void main(String[] args) {
-    System.out.println("Hagman under construction");
+    System.out.println("Hangman under construction");
   }
 
 }
