@@ -19,8 +19,10 @@ public class Word {
     } catch (FileNotFoundException ex) {
       ex.printStackTrace();
     }
+    /*
     System.out.println("word: " + this.word);
     System.out.println("index: " + this.bonusPoints);
+    */
   }
   
   /**
@@ -46,7 +48,7 @@ public class Word {
    * @throws FileNotFoundException  if no word list .txt file is found
    */
   private String obtainWord() throws FileNotFoundException {
-    Scanner scan = new Scanner(new File("resources/nounsEnglish.txt"));
+    Scanner scan = new Scanner(new File("/Users/josebarroca/1dv600/jd222qf_1dv600/resources/nounsEnglish.txt"));
     ArrayList<String> words = new ArrayList<>();
     while(scan.hasNextLine()) {
       words.add(scan.nextLine());
@@ -65,28 +67,32 @@ public class Word {
    */
   private int calculateBonusPoints() throws FileNotFoundException {
     //creating map of points for first letters
-    Scanner scanFirstLetter = new Scanner(new File("resources/firstLetterFreq.txt"));
+    Scanner scanFirstLetter = new Scanner(new File("/Users/josebarroca/1dv600/jd222qf_1dv600/resources/firstLetterFreq.txt"));
     Map firstLetterPoints = new Hashtable();
     while(scanFirstLetter.hasNextLine()) {
       firstLetterPoints.put(scanFirstLetter.next(), Math.round(1.0 / scanFirstLetter.nextDouble()*100));
     }
     scanFirstLetter.close();
+    /*
     System.out.println("First letters' points:");
     for (Object key : firstLetterPoints.keySet()) {
       System.out.println(key.toString() + " : " + firstLetterPoints.get(key).toString());
     }
+    */
     
     //creating map of points for remaining letters
-    Scanner scanOthers = new Scanner(new File("resources/letterFreq.txt"));
+    Scanner scanOthers = new Scanner(new File("/Users/josebarroca/1dv600/jd222qf_1dv600/resources/letterFreq.txt"));
     Map otherLetterPoints = new Hashtable();
     while(scanOthers.hasNextLine()) {
       otherLetterPoints.put(scanOthers.next(), Math.round(1.0 / scanOthers.nextDouble() * 100));
     }
     scanOthers.close();
+    /*
     System.out.println("Other letters' points:");
     for (Object key : otherLetterPoints.keySet()) {
       System.out.println(key.toString() + " : " + otherLetterPoints.get(key).toString());
     }
+    */
 
     char[] wordChars = this.word.toCharArray();
     int wordPoints = 0;
