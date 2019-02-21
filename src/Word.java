@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -68,9 +67,9 @@ public class Word {
   private int calculateBonusPoints() throws FileNotFoundException {
     //creating map of points for first letters
     Scanner scanFirstLetter = new Scanner(new File("/Users/josebarroca/1dv600/jd222qf_1dv600/resources/firstLetterFreq.txt"));
-    Map firstLetterPoints = new Hashtable();
+    Map<String, Integer> firstLetterPoints = new Hashtable<String, Integer>();
     while(scanFirstLetter.hasNextLine()) {
-      firstLetterPoints.put(scanFirstLetter.next(), Math.round(1.0 / scanFirstLetter.nextDouble()*100));
+      firstLetterPoints.put(scanFirstLetter.next(), (int) Math.round(1.0 / scanFirstLetter.nextDouble()*100));
     }
     scanFirstLetter.close();
     /*
@@ -82,9 +81,9 @@ public class Word {
     
     //creating map of points for remaining letters
     Scanner scanOthers = new Scanner(new File("/Users/josebarroca/1dv600/jd222qf_1dv600/resources/letterFreq.txt"));
-    Map otherLetterPoints = new Hashtable();
+    Map<String, Integer> otherLetterPoints = new Hashtable<String, Integer>();
     while(scanOthers.hasNextLine()) {
-      otherLetterPoints.put(scanOthers.next(), Math.round(1.0 / scanOthers.nextDouble() * 100));
+      otherLetterPoints.put(scanOthers.next(), (int) Math.round(1.0 / scanOthers.nextDouble() * 100));
     }
     scanOthers.close();
     /*
