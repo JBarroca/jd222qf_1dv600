@@ -4,24 +4,29 @@ import java.util.Scanner;
 
 public class Hangman {
 
-	private String playerName; 	//to be implemented
-	private int playerScore;	//to be implemented
+	private String playerName; 		//to be implemented
+	private int playerScore = 0;	//to be implemented
 	private String word;
-	private int triesLeft;
+	private int triesLeft = 9;
 	private boolean wordHasBeenFound= false;
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		Hangman game = new Hangman();
+		Hangman game = new Hangman(new Word());
 		game.startProgram();
 		game.gameScanner.close();
 	}
 	
-	public Hangman() {}
+	public Hangman(Word word) {
+		this.word = word.getWord();
+	}
+	
+	public Hangman (String wordString) {
+		this.word = wordString;
+	}
 	
 	public void startProgram() {
-		resetGame();
 		System.out.println("---- Welcome to the world's best Hangman game ever! ----\n");
 	    System.out.print(buildStartMenu());
 	    String input;
@@ -52,6 +57,7 @@ public class Hangman {
 		this.word = new Word().getWord();
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
+		startProgram();
 	}
 	
 	public void playSingleGame() {
@@ -69,7 +75,7 @@ public class Hangman {
 				} else if (nextLetter.equals("resetgame")) {
 					if(wantsToReset()) {
 						System.out.println("\nresetting the game...");
-						startProgram();
+						resetGame();
 					} else {
 						continue;
 					}
@@ -150,7 +156,7 @@ public class Hangman {
 		    System.out.print("\nPlease press a key to select an option: ");
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
-		    	startProgram();
+		    	resetGame();
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
 					System.out.println("\nBye bye!");
@@ -174,7 +180,7 @@ public class Hangman {
 	    	System.out.print("Please press a key to select an option: ");
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
-		    	startProgram();
+		    	resetGame();
 	    	} else if (input.equals("0")) {
 	    		if(wantsToQuit()) {
 					System.out.println("\nBye bye!");
@@ -237,7 +243,7 @@ public class Hangman {
 	    	} else if (input.equals("2")) {
 		    	System.out.println("To be implemented");
 	    	} else if (input.equals("0")) {
-		    	startProgram();
+		    	resetGame();
 	    	} else {
 	    		System.out.print("Invalid input.\n");	    		
 	    	}
@@ -256,7 +262,7 @@ public class Hangman {
 	    	} else if (input.equals("2")) {
 	    		System.out.println("To be implemented");
 	    	} else if (input.equals("0")) {
-	    		startProgram();
+	    		resetGame();
 	    	} else {
 	    		System.out.print("Invalid input.\n");	    		
 	    	}
