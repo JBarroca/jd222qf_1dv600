@@ -11,12 +11,6 @@ public class Hangman {
 	private boolean wordHasBeenFound= false;
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
-
-	public static void main(String[] args) {
-		Hangman game = new Hangman(new Word());
-		game.startProgram();
-		game.gameScanner.close();
-	}
 	
 	public Hangman(Word word) {
 		this.word = word.getWord();
@@ -41,7 +35,8 @@ public class Hangman {
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
 					System.out.println("\nBye bye!");
-					System.out.println("quitting...");									
+					System.out.println("quitting...");
+					this.gameScanner.close();
 		    	} else {
 		    		input = "-1";
 		    		continue;
@@ -82,7 +77,8 @@ public class Hangman {
 				} else if (nextLetter.equals("quitgame")) {
 			    	if(wantsToQuit()) {
 						System.out.println("\nBye bye!");
-						System.out.println("quitting...");									
+						System.out.println("quitting...");
+						this.gameScanner.close();
 			    	} else {
 			    		continue;
 			    	}
@@ -160,7 +156,8 @@ public class Hangman {
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
 					System.out.println("\nBye bye!");
-					System.out.println("quitting...");									
+					System.out.println("quitting...");
+					this.gameScanner.close();
 		    	} else {
 		    		input = "-1";
 		    		continue;		    		
