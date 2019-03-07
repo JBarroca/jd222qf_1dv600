@@ -12,8 +12,8 @@ public class Hangman {
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
 	
-	public Hangman(Word word) {
-		this.word = word.getWord();
+	public Hangman() {
+		this.word = new Word().getWord();
 	}
 	
 	public Hangman (String wordString) {
@@ -34,9 +34,7 @@ public class Hangman {
 		    	highScoreMenu();
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
-					System.out.println("\nBye bye!");
-					System.out.println("quitting...");
-					this.gameScanner.close();
+					quitGame();
 		    	} else {
 		    		input = "-1";
 		    		continue;
@@ -55,8 +53,14 @@ public class Hangman {
 		startProgram();
 	}
 	
+	public void quitGame() {
+		System.out.println("\nBye bye!");
+		this.gameScanner.close();
+		System.exit(0);
+	}
+	
 	public void playSingleGame() {
-		System.out.println(buildGameRoundBoard(updateWord()));
+		System.out.println(buildGameRoundBoard(updateWord(this.word, this.guessedLetters)));
 		while (this.triesLeft > 0 && !this.wordHasBeenFound) {
 			System.out.print("\nPlease enter a letter or guess the entire word\n(or write 'resetgame' to return to start menu or 'quitgame' to quit the program): ");
 			String nextLetter = this.gameScanner.next();
@@ -76,9 +80,7 @@ public class Hangman {
 					}
 				} else if (nextLetter.equals("quitgame")) {
 			    	if(wantsToQuit()) {
-						System.out.println("\nBye bye!");
-						System.out.println("quitting...");
-						this.gameScanner.close();
+			    		quitGame();
 			    	} else {
 			    		continue;
 			    	}
@@ -89,16 +91,16 @@ public class Hangman {
 			//player enters a single Character
 			} else {
 				//input is a valid letter
-				if (inputIsValid(nextLetter)) {
+				if (inputIsValid(nextLetter, this.guessedLetters)) {
 					//letter exists in word
 					if(this.word.contains(nextLetter)) {
 						this.guessedLetters.add(nextLetter);
 						Collections.sort(this.guessedLetters);
 						//check for completed word
-						if(wordIsGuessed(updateWord())) {
+						if(wordIsGuessed(updateWord(this.word, this.guessedLetters))) {
 							System.out.println("\n  ** Bravo, you've guessed it!! **");
 							this.wordHasBeenFound = true;
-							winGame(updateWord());
+							winGame(updateWord(this.word, this.guessedLetters));
 						} else {
 							System.out.println("\n  ** :) Nice guess! **");							
 						}
@@ -114,7 +116,7 @@ public class Hangman {
 					System.out.println("\n  ** Enter a valid letter that you haven't tried before. **");
 				}
 			}
-			System.out.println(buildGameRoundBoard(updateWord()));
+			System.out.println(buildGameRoundBoard(updateWord(this.word, this.guessedLetters)));
 		}
 		//player runs out of tries = looses
 		if (this.triesLeft == 0) {
@@ -122,11 +124,11 @@ public class Hangman {
 		}
 	}
   
-	public String updateWord() {
+	public String updateWord(String gameWord, ArrayList<String> guessedLetters) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < this.word.length(); i++) {
-			if(this.guessedLetters.contains(Character.toString(this.word.charAt(i)))) {
-				sb.append(Character.toUpperCase(this.word.charAt(i)));
+		for (int i = 0; i < gameWord.length(); i++) {
+			if(guessedLetters.contains(Character.toString(gameWord.charAt(i)))) {
+				sb.append(Character.toUpperCase(gameWord.charAt(i)));
 			} else {
 				sb.append("-");
 			}
@@ -134,8 +136,8 @@ public class Hangman {
 		return sb.toString();	
 	}
 	
-	public boolean inputIsValid(String input) {
-		return (Character.isLetter(input.charAt(0)) && !this.guessedLetters.contains(input));
+	public boolean inputIsValid(String input, ArrayList<String> guessedLetters) {
+		return (Character.isLetter(input.charAt(0)) && !guessedLetters.contains(input));
 	}
 	
 	public boolean wordIsGuessed(String guess) {
@@ -155,9 +157,7 @@ public class Hangman {
 		    	resetGame();
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
-					System.out.println("\nBye bye!");
-					System.out.println("quitting...");
-					this.gameScanner.close();
+		    		quitGame();
 		    	} else {
 		    		input = "-1";
 		    		continue;		    		
@@ -180,8 +180,7 @@ public class Hangman {
 		    	resetGame();
 	    	} else if (input.equals("0")) {
 	    		if(wantsToQuit()) {
-					System.out.println("\nBye bye!");
-					System.out.println("quitting...");									
+	    			quitGame();
 		    	} else {
 		    		input = "-1";
 		    		continue;		    		
