@@ -124,6 +124,14 @@ public class Hangman {
 		}
 	}
   
+	/**
+	 * Updates the String displaying the hidden game word to the Player. For each
+	 * letter that the Player has not guessed, a hyphen is shown instead.	  
+	 * @param gameWord			The game's current word 
+	 * @param guessedLetters	an ArrayList containing every previously guessed letter
+	 * @return					A String representation of the game word according
+	 * to the letters that the Player has guessed so far.
+	 */
 	public String updateWord(String gameWord, ArrayList<String> guessedLetters) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < gameWord.length(); i++) {
@@ -136,6 +144,14 @@ public class Hangman {
 		return sb.toString();	
 	}
 	
+	/**
+	 * Returns true if the player writes a letter and if that letter has not 
+	 * been guessed before. Returns false otherwise.
+	 * @param input				a String of length 1 written in the console by the Player
+	 * @param guessedLetters	an ArrayList containing every previously guessed letter
+	 * @return					true if input is a letter and it has not been previously
+	 * guessed, false otherwise
+	 */
 	public boolean inputIsValid(String input, ArrayList<String> guessedLetters) {
 		return (Character.isLetter(input.charAt(0)) && !guessedLetters.contains(input));
 	}
