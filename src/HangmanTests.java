@@ -76,4 +76,16 @@ class HangmanTests {
 		
 		assertEquals(actual, expected);	
 	}
+	
+	@Test
+	public void shouldReturnTrueIfStringContainsNumbers() {
+		Hangman sut = new Hangman();
+		String testWord = "JamesBond007"; 
+		boolean expected = true;
+
+		//exercising sut:
+		boolean actual = sut.wordContainsNumbers(testWord);
+		
+		assertEquals(actual, expected);
+	}
 }

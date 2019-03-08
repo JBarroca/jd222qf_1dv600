@@ -156,6 +156,20 @@ public class Hangman {
 		return (Character.isLetter(input.charAt(0)) && !guessedLetters.contains(input));
 	}
 	
+	//method for failing unit test
+	//should return true if provided String contains numeric characters
+	public boolean wordContainsNumbers(String input) {
+		/* COMMENTING OUT CORRECT IMPLEMENTATION
+		for (int i = 0; i < input.length(); i++) {
+			if(Character.isDigit(input.charAt(i))) {
+				return true;
+			}
+		}
+		*/
+		return false;
+	}
+	
+	
 	public boolean wordIsGuessed(String guess) {
 		return guess.equalsIgnoreCase(this.word);
 	}
