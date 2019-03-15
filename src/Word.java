@@ -18,10 +18,10 @@ public class Word {
     } catch (FileNotFoundException ex) {
       ex.printStackTrace();
     }
-    /*
+    
     System.out.println("word: " + this.word);
-    System.out.println("index: " + this.bonusPoints);
-    */
+    System.out.println("word points: " + this.bonusPoints);
+    
   }
   
   /**
@@ -72,11 +72,12 @@ public class Word {
       firstLetterPoints.put(scanFirstLetter.next(), (int) Math.round(1.0 / scanFirstLetter.nextDouble()*100));
     }
     scanFirstLetter.close();
+    
     /*
     System.out.println("First letters' points:");
     for (Object key : firstLetterPoints.keySet()) {
       System.out.println(key.toString() + " : " + firstLetterPoints.get(key).toString());
-    }
+  	}
     */
     
     //creating map of points for remaining letters
@@ -86,12 +87,14 @@ public class Word {
       otherLetterPoints.put(scanOthers.next(), (int) Math.round(1.0 / scanOthers.nextDouble() * 100));
     }
     scanOthers.close();
+    
     /*
     System.out.println("Other letters' points:");
     for (Object key : otherLetterPoints.keySet()) {
       System.out.println(key.toString() + " : " + otherLetterPoints.get(key).toString());
     }
     */
+    
 
     char[] wordChars = this.word.toCharArray();
     int wordPoints = 0;
