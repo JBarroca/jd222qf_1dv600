@@ -86,22 +86,10 @@ public class Score {
 	public ArrayList<Integer> getScoresList(File scoreFile) throws FileNotFoundException {
 		ArrayList<Integer> scoreList = new ArrayList<>();
 		
-		/*
-		Scanner scoreScanner = new Scanner(scoreFile);
-		while (scoreScanner.hasNextInt()) {
-			scoreList.add(scoreScanner.nextInt());
-		}
-		scoreScanner.close();
-		*/
-		
 		Map<String, Integer> scoresMap = readHighScoreFile(scoreFile);
 		for(Map.Entry<String, Integer> entry : scoresMap.entrySet()) {
 			scoreList.add(entry.getValue());
 		}
-		/*
-		Collections.sort(scoreList);
-		Collections.reverse(scoreList); //ascending order
-		*/
 		System.out.println("scoreList: " + scoreList.toString());
 		return scoreList;
 	}
@@ -171,7 +159,7 @@ public class Score {
     
 	/**
 	 * Sorts a map containing (player:score) pairs according to score
-	 * source: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/ 
+	 * adapted from: https://www.geeksforgeeks.org/sorting-a-hashmap-according-to-values/ 
 	 * @param hm	The hashmap to be sorted
 	 * @return		A sorted HashMap of players:scores
 	 */
