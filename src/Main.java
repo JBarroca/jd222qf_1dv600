@@ -5,6 +5,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		
+		/*
 		Score scr = new Score(2);
 					
 		Score.registerHighScore("tobias", scr.getScore());
@@ -17,12 +18,10 @@ public class Main {
 		Score.readHighScoreFile(Score.getHighScoreFile());
 		
 		System.out.println(scr.isHighScore());
+		*/
 		
-		
-		/*
 		Hangman game = new Hangman();
 		game.startProgram();
-		*/
 	}
 
 }

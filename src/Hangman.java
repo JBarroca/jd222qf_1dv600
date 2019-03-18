@@ -22,7 +22,7 @@ public class Hangman {
 	
 	public void startProgram() {
 		System.out.println("---- Welcome to the world's best Hangman game ever! ----\n");
-	    System.out.print(buildStartMenu());
+	    System.out.print(Menu.showStartMenu());
 	    String input;
 	    
 	    do {
@@ -60,73 +60,73 @@ public class Hangman {
 	}
 	
 	public void playSingleGame() {
-		System.out.println(buildGameRoundBoard(updateWord(this.word, this.guessedLetters)));
+		String message = "let's play!";
+		
+		System.out.println(Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message));
 		while (this.triesLeft > 0 && !this.wordHasBeenFound) {
 			System.out.print("\nPlease enter a letter or guess the entire word\n(or write 'resetgame' to return to start menu or 'quitgame' to quit the program): ");
-			String nextLetter = this.gameScanner.next();
+			String playerInput = this.gameScanner.next();
 			
 			//player enters a word
-			if (nextLetter.length() > 1) {
-				if (wordIsGuessed(nextLetter)) {
+			if (playerInput.length() > 1) {
+				if (wordIsGuessed(playerInput)) {
 					this.wordHasBeenFound = true;
-					winGame(nextLetter.toUpperCase());
+					winGame(playerInput.toUpperCase());
 					// TODO: IMPLEMENT BONUS FOR GUESSING ENTIRE WORD					
-				} else if (nextLetter.equals("resetgame")) {
+				} else if (playerInput.equals("resetgame")) {
 					if(wantsToReset()) {
-						System.out.println("\nresetting the game...");
 						resetGame();
 					} else {
 						continue;
 					}
-				} else if (nextLetter.equals("quitgame")) {
-			    	if(wantsToQuit()) {
+				} else if (playerInput.equals("quitgame")) {
+					if(wantsToQuit()) {
 			    		quitGame();
 			    	} else {
 			    		continue;
 			    	}
 				} else {
-					System.out.println("\n  ** Nope, that's not the correct word! **");
+					message = "Nope, that's not the correct word!";
 					this.triesLeft--;
 				}
 			//player enters a single Character
 			} else {
 				//input is a valid letter
-				if (inputIsValid(nextLetter, this.guessedLetters)) {
+				if (inputIsValid(playerInput, this.guessedLetters)) {
 					//letter exists in word
-					if(this.word.contains(nextLetter)) {
-						this.guessedLetters.add(nextLetter);
+					if(this.word.contains(playerInput)) {
+						this.guessedLetters.add(playerInput);
 						Collections.sort(this.guessedLetters);
 						//check for completed word
 						if(wordIsGuessed(updateWord(this.word, this.guessedLetters))) {
-							System.out.println("\n  ** Bravo, you've guessed it!! **");
 							this.wordHasBeenFound = true;
 							winGame(updateWord(this.word, this.guessedLetters));
 						} else {
-							System.out.println("\n  ** :) Nice guess! **");							
+							message = ":) Nice guess!";							
 						}
 					//letter does not exist in word
 					} else {
-						this.guessedLetters.add(nextLetter);
+						this.guessedLetters.add(playerInput);
 						Collections.sort(this.guessedLetters);
-						System.out.println("\n  ** :( Nope, no " + nextLetter + "'s in this word! **");
+						message = ":( Nope, no " + playerInput + "'s in this word!";
 						this.triesLeft--;								
 					}					
 				//invalid input
 				} else {
-					System.out.println("\n  ** Enter a valid letter that you haven't tried before. **");
+					message = "Enter a valid letter that you haven't tried before.";
 				}
 			}
-			System.out.println(buildGameRoundBoard(updateWord(this.word, this.guessedLetters)));
+			System.out.println(Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message));
 		}
-		//player runs out of tries = looses
+		//player runs out of tries (i.e., player looses)
 		if (this.triesLeft == 0) {
 			loseGame();
 		}
 	}
   
 	/**
-	 * Updates the String displaying the hidden game word to the Player. For each
-	 * letter that the Player has not guessed, a hyphen is shown instead.	  
+	 * Displays the hidden game word replacing every unguessed character as a hyphen.
+	 * If the player guesses a letter, changes the hyphen back to that letter.
 	 * @param gameWord			The game's current word 
 	 * @param guessedLetters	an ArrayList containing every previously guessed letter
 	 * @return					A String representation of the game word according
@@ -154,21 +154,7 @@ public class Hangman {
 	 */
 	public boolean inputIsValid(String input, ArrayList<String> guessedLetters) {
 		return (Character.isLetter(input.charAt(0)) && !guessedLetters.contains(input));
-	}
-	
-	//method for failing unit test
-	//should return true if provided String contains numeric characters
-	public boolean wordContainsNumbers(String input) {
-		/* COMMENTING OUT CORRECT IMPLEMENTATION
-		for (int i = 0; i < input.length(); i++) {
-			if(Character.isDigit(input.charAt(i))) {
-				return true;
-			}
-		}
-		*/
-		return false;
-	}
-	
+	}	
 	
 	public boolean wordIsGuessed(String guess) {
 		return guess.equalsIgnoreCase(this.word);
@@ -258,7 +244,7 @@ public class Hangman {
 	}
 		
 	public void newGameMenu() {
-	    System.out.print(buildNewGameMenu());
+	    System.out.print(Menu.showNewGameMenu());
 	    String input;
 	    
 	    do {
@@ -277,7 +263,7 @@ public class Hangman {
 	}
 	
 	public void highScoreMenu() {
-	    System.out.print(buildHighScoreMenu());
+	    System.out.print(Menu.showHighScoreMenu());
 	    String input;
 	    
 	    do {
@@ -294,63 +280,7 @@ public class Hangman {
 	    	}
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
-	
-	public String buildStartMenu() {
-		StringBuilder menu = new StringBuilder();
-	    menu.append("\n");
-	    menu.append("========== START ===========\n");
-	    menu.append("|| 1 - Play a new game    ||\n");
-	    menu.append("||                        ||\n");
-	    menu.append("|| 2 - View high scores   ||\n");
-	    menu.append("||                        ||\n");
-	    menu.append("|| 0 - Quit application   ||\n");
-	    menu.append("============================\n");
-	    return menu.toString();
-	}
 
-	public String buildNewGameMenu() {
-	    StringBuilder menu = new StringBuilder();
-	    menu.append("\n");
-	    menu.append("========= NEW GAME ==========\n");
-	    menu.append("|| 1 - Play a single game  ||\n");
-	    menu.append("||                         ||\n");
-	    menu.append("|| 2 - Play a 5-word game  ||\n");
-	    menu.append("||                         ||\n");
-	    menu.append("|| 0 - Back to main menu   ||\n");
-	    menu.append("=============================\n");
-	    return menu.toString();
-	}
-	
-	public String buildHighScoreMenu() {
-	    StringBuilder menu = new StringBuilder();
-	    menu.append("\n");
-	    menu.append("============ HIGH SCORES =============\n");
-	    menu.append("|| 1 - Show single game highscores  ||\n");
-	    menu.append("||                                  ||\n");
-	    menu.append("|| 2 - Show 5-word game highscores  ||\n");
-	    menu.append("||                                  ||\n");
-	    menu.append("|| 0 - Back to main menu            ||\n");
-	    menu.append("======================================\n");
-	    return menu.toString();
-	}
-	
-	public String buildGameRoundBoard(String word) {
-		StringBuilder gameBoard = new StringBuilder();
-		gameBoard.append("\n");
-		gameBoard.append("========================================== SINGLE GAME ===================================\n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  || CURRENT WORD: " + word + "                                         \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||    (hangman)     ||                                                                    \n");
-		gameBoard.append("||                  || Previous letters: " + this.guessedLetters.toString() + "           \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  || Number of tries left: " + this.triesLeft + "                       \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("==========================================================================================");
-		return gameBoard.toString();
-	}
-	
 	public String buildWinGameBoard(String word) {
 		StringBuilder victoryBoard = new StringBuilder();
 		victoryBoard.append("\n");
@@ -358,7 +288,7 @@ public class Hangman {
 		victoryBoard.append("||                  ||                                                                    \n");
 		victoryBoard.append("||                  ||     ********************** YOU WON!!!! **********************      \n");
 		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || You found " + word + " in " + (10 - this.triesLeft) + " tries.      \n");
+		victoryBoard.append("||                  || You found " + word + " in " + (10 - this.triesLeft) + " tries.     \n");
 		victoryBoard.append("||    (hangman)     ||                                                                    \n");
 		victoryBoard.append("||                  || (HIGHSCORE TO BE IMPLEMENTED)                                      \n");
 		victoryBoard.append("||                  ||                                                                    \n");
@@ -378,7 +308,7 @@ public class Hangman {
 		loseBoard.append("||                  ||                                                                    \n");
 		loseBoard.append("||                  ||     ********************** YOU LOSE :( **********************      \n");
 		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  || Word was " + this.word.toUpperCase() + "                                         \n");
+		loseBoard.append("||                  || Word was " + this.word.toUpperCase() + "                           \n");
 		loseBoard.append("||    (hangman)     ||                                                                    \n");
 		loseBoard.append("||                  || ------------------------------                                     \n");
 		loseBoard.append("||                  || 1 - Return to start menu                                           \n");
