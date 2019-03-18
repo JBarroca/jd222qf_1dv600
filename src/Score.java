@@ -38,8 +38,8 @@ public class Score {
 		}
 	}
 	
-	public void onRightWordGuess() {
-		this.score += 100;
+	public void onRightWordGuess(int triesLeft) {
+		this.score += (100 + triesLeft*10);
 	}
 	
 	public void onWrongWordGuess() {
@@ -114,11 +114,11 @@ public class Score {
 	 * @param playerName	the Player's specified name
 	 * @param score			the score to be registered
 	 */
-	public static void registerHighScore(String playerName, int score) {
+	public static void registerHighScore(String playerName, Score score) {
 		try {			
 			PrintWriter scoreWriter = new PrintWriter(new BufferedWriter(new FileWriter("resources/highscore.txt", true)));
 			scoreWriter.print(playerName + " ");
-			scoreWriter.println(score);
+			scoreWriter.println(score.getScore());
 			scoreWriter.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

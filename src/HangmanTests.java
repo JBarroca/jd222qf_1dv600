@@ -38,7 +38,7 @@ class HangmanTests {
 	@Test
 	public void shouldNotRevealLettersIfIncorrectlyGuessed() {
 		String gameWord = "forest";
-		Hangman sut = new Hangman(gameWord);
+		Hangman sut = new Hangman(gameWord, 0);
 		ArrayList<String> guessedLetters = new ArrayList<>();
 		guessedLetters.add("a");
 		guessedLetters.add("u");
@@ -59,7 +59,7 @@ class HangmanTests {
 	@Test
 	public void shouldRevealLettersIfCorrectlyGuessed() {
 		String gameWord = "rainbow";
-		Hangman sut = new Hangman(gameWord);
+		Hangman sut = new Hangman(gameWord, 0);
 		ArrayList<String> guessedLetters = new ArrayList<>();
 		guessedLetters.add("r"); //correct
 		guessedLetters.add("x");

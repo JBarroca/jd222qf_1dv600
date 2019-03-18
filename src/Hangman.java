@@ -1,11 +1,11 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
 public class Hangman {
 
-	private String playerName; 		//to be implemented
-	private int playerScore = 0;	//to be implemented
+	private Score playerScore;
 	private String word;
 	private int triesLeft = 9;
 	private boolean wordHasBeenFound= false;
@@ -13,16 +13,18 @@ public class Hangman {
 	private Scanner gameScanner = new Scanner(System.in);
 	
 	public Hangman() {
-		this.word = new Word().getWord();
+		Word gameWord = new Word();
+		this.word = gameWord.getWord();
+		this.playerScore = new Score(gameWord.getBonusPoints());
 	}
 	
-	public Hangman (String wordString) {
+	public Hangman (String wordString, int score) {
 		this.word = wordString;
+		this.playerScore = new Score(score);
 	}
 	
-	public void startProgram() {
-		System.out.println("---- Welcome to the world's best Hangman game ever! ----\n");
-	    System.out.print(Menu.showStartMenu());
+	public void startProgram() throws IOException {
+	    Menu.showStartMenu();
 	    String input;
 	    
 	    do {
@@ -45,9 +47,10 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));  
 	}
 	
-	public void resetGame() {
-		this.playerScore = 0;
-		this.word = new Word().getWord();
+	public void resetGame() throws IOException {
+		Word newGameWord = new Word();
+		this.word = newGameWord.getWord();
+		this.playerScore = new Score(newGameWord.getBonusPoints());
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
 		startProgram();
@@ -59,10 +62,10 @@ public class Hangman {
 		System.exit(0);
 	}
 	
-	public void playSingleGame() {
+	public void playSingleGame() throws IOException {
 		String message = "let's play!";
+		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
 		
-		System.out.println(Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message));
 		while (this.triesLeft > 0 && !this.wordHasBeenFound) {
 			System.out.print("\nPlease enter a letter or guess the entire word\n(or write 'resetgame' to return to start menu or 'quitgame' to quit the program): ");
 			String playerInput = this.gameScanner.next();
@@ -71,8 +74,8 @@ public class Hangman {
 			if (playerInput.length() > 1) {
 				if (wordIsGuessed(playerInput)) {
 					this.wordHasBeenFound = true;
-					winGame(playerInput.toUpperCase());
-					// TODO: IMPLEMENT BONUS FOR GUESSING ENTIRE WORD					
+					this.playerScore.onRightWordGuess(this.triesLeft);
+					winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore);
 				} else if (playerInput.equals("resetgame")) {
 					if(wantsToReset()) {
 						resetGame();
@@ -87,6 +90,7 @@ public class Hangman {
 			    	}
 				} else {
 					message = "Nope, that's not the correct word!";
+					this.playerScore.onWrongWordGuess();
 					this.triesLeft--;
 				}
 			//player enters a single Character
@@ -95,17 +99,19 @@ public class Hangman {
 				if (inputIsValid(playerInput, this.guessedLetters)) {
 					//letter exists in word
 					if(this.word.contains(playerInput)) {
+						this.playerScore.onRightTry();
 						this.guessedLetters.add(playerInput);
 						Collections.sort(this.guessedLetters);
 						//check for completed word
 						if(wordIsGuessed(updateWord(this.word, this.guessedLetters))) {
 							this.wordHasBeenFound = true;
-							winGame(updateWord(this.word, this.guessedLetters));
+							winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore);
 						} else {
 							message = ":) Nice guess!";							
 						}
 					//letter does not exist in word
 					} else {
+						this.playerScore.onWrongTry();
 						this.guessedLetters.add(playerInput);
 						Collections.sort(this.guessedLetters);
 						message = ":( Nope, no " + playerInput + "'s in this word!";
@@ -116,7 +122,7 @@ public class Hangman {
 					message = "Enter a valid letter that you haven't tried before.";
 				}
 			}
-			System.out.println(Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message));
+			Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
 		}
 		//player runs out of tries (i.e., player looses)
 		if (this.triesLeft == 0) {
@@ -160,17 +166,30 @@ public class Hangman {
 		return guess.equalsIgnoreCase(this.word);
 	}
 	
-	public void winGame(String word) {
-		//TODO: implement high score
+	public void winGame(String word, int triesLeft, Score playerScore) throws IOException {
 		
-		System.out.print(buildWinGameBoard(word));
-	    String input;
+		boolean isHighScore = playerScore.isHighScore();
+		Menu.showWinGame(word, triesLeft, playerScore, isHighScore);
+		String input;
 	    
+		if(isHighScore) {
+			System.out.print("Please enter your nickname to register your highscore: ");
+			input = this.gameScanner.next();
+			Score.registerHighScore(input, playerScore);			
+		}
+		
 	    do {
-		    System.out.print("\nPlease press a key to select an option: ");
+		    System.out.println("\nPlease press a key to select an option: ");
+		    System.out.println("1 - Return to Start menu");
+		    System.out.println("2 - View High Scores");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
 		    	resetGame();
+	    	} else if (input.equals("2")) {
+	    		highScoreMenu();
 	    	} else if (input.equals("0")) {
 		    	if(wantsToQuit()) {
 		    		quitGame();
@@ -182,15 +201,20 @@ public class Hangman {
 	    		System.out.print("Invalid input.\n");
 	    		continue;
 	    	}
-	    } while (!(input.equals("1") || input.equals("0")));
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
 
-	public void loseGame() {
-		System.out.print(buildLoseGameBoard());		
+	public void loseGame() throws IOException {
+		Menu.showLoseGame(this.word);
 	    String input;
 	    
 	    do {
-	    	System.out.print("Please press a key to select an option: ");
+		    System.out.println("\nPlease press a key to select an option: ");
+		    System.out.println("1 - Return to Start menu");
+		    System.out.println("2 - View High Scores");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+		    
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
 		    	resetGame();
@@ -243,8 +267,8 @@ public class Hangman {
 		return wantsToQuit;	
 	}
 		
-	public void newGameMenu() {
-	    System.out.print(Menu.showNewGameMenu());
+	public void newGameMenu() throws IOException {
+	    Menu.showNewGameMenu();
 	    String input;
 	    
 	    do {
@@ -262,8 +286,8 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
 	
-	public void highScoreMenu() {
-	    System.out.print(Menu.showHighScoreMenu());
+	public void highScoreMenu() throws IOException {
+	    Menu.showHighScoreMenu();
 	    String input;
 	    
 	    do {
@@ -280,42 +304,5 @@ public class Hangman {
 	    	}
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
-
-	public String buildWinGameBoard(String word) {
-		StringBuilder victoryBoard = new StringBuilder();
-		victoryBoard.append("\n");
-		victoryBoard.append("========================================== SINGLE GAME ===================================\n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  ||     ********************** YOU WON!!!! **********************      \n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || You found " + word + " in " + (10 - this.triesLeft) + " tries.     \n");
-		victoryBoard.append("||    (hangman)     ||                                                                    \n");
-		victoryBoard.append("||                  || (HIGHSCORE TO BE IMPLEMENTED)                                      \n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || ------------------------------                                     \n");
-		victoryBoard.append("||                  || 1 - Return to start menu                                           \n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || 0 - Quit the application                                           \n");		
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("==========================================================================================\n");
-		return victoryBoard.toString();
-	}
 	
-	public String buildLoseGameBoard() {
-		StringBuilder loseBoard = new StringBuilder();
-		loseBoard.append("\n");
-		loseBoard.append("========================================== SINGLE GAME ===================================\n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  ||     ********************** YOU LOSE :( **********************      \n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  || Word was " + this.word.toUpperCase() + "                           \n");
-		loseBoard.append("||    (hangman)     ||                                                                    \n");
-		loseBoard.append("||                  || ------------------------------                                     \n");
-		loseBoard.append("||                  || 1 - Return to start menu                                           \n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  || 0 - Quit the application                                           \n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("==========================================================================================\n");
-		return loseBoard.toString();
-	}
 }
