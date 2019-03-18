@@ -18,12 +18,14 @@ public class Hangman {
 		this.playerScore = new Score(gameWord.getBonusPoints());
 	}
 	
-	public Hangman (String wordString, int score) {
+	public Hangman(String wordString, int score) {
 		this.word = wordString;
 		this.playerScore = new Score(score);
 	}
 	
 	public void startProgram() throws IOException {
+		System.out.println("inside startProgram()");
+		
 	    Menu.showStartMenu();
 	    String input;
 	    
@@ -48,11 +50,14 @@ public class Hangman {
 	}
 	
 	public void resetGame() throws IOException {
+		System.out.println("inside resetGame()");
+		
 		Word newGameWord = new Word();
 		this.word = newGameWord.getWord();
 		this.playerScore = new Score(newGameWord.getBonusPoints());
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
+		this.wordHasBeenFound = false;
 		startProgram();
 	}
 	
@@ -63,11 +68,14 @@ public class Hangman {
 	}
 	
 	public void playSingleGame() throws IOException {
+		System.out.println("inside playSingleGame()");
+		
 		String message = "let's play!";
 		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
 		
 		while (this.triesLeft > 0 && !this.wordHasBeenFound) {
-			System.out.print("\nPlease enter a letter or guess the entire word\n(or write 'resetgame' to return to start menu or 'quitgame' to quit the program): ");
+			System.out.println("\nPlease enter a letter or guess the entire word");
+			System.out.print("or write 'resetgame' to return to start menu or 'quitgame' to quit the program): ");
 			String playerInput = this.gameScanner.next();
 			
 			//player enters a word
@@ -122,6 +130,7 @@ public class Hangman {
 					message = "Enter a valid letter that you haven't tried before.";
 				}
 			}
+			System.out.println("Aqui 1");
 			Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
 		}
 		//player runs out of tries (i.e., player looses)
@@ -129,9 +138,9 @@ public class Hangman {
 			loseGame();
 		}
 	}
-  
+	
 	/**
-	 * Displays the hidden game word replacing every unguessed character as a hyphen.
+	 * Returns the hidden game word replacing every unguessed character as a hyphen.
 	 * If the player guesses a letter, changes the hyphen back to that letter.
 	 * @param gameWord			The game's current word 
 	 * @param guessedLetters	an ArrayList containing every previously guessed letter
@@ -139,6 +148,8 @@ public class Hangman {
 	 * to the letters that the Player has guessed so far.
 	 */
 	public String updateWord(String gameWord, ArrayList<String> guessedLetters) {
+		System.out.println("inside updateWord()");
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < gameWord.length(); i++) {
 			if(guessedLetters.contains(Character.toString(gameWord.charAt(i)))) {
