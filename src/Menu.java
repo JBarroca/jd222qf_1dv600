@@ -85,6 +85,7 @@ public class Menu {
 		StringBuilder table = new StringBuilder();
 		table.append("\n");
 		table.append("========== HIGH SCORES (single games) ==========\n");
+		table.append("||                                                     \n");
 		table.append("||    -- POINTS --  -- PLAYER --                       \n");
 		table.append("||                                                     \n");
 		table.append("|| 1 - " + scores[0] + " points    - " + names[0] + "  \n");

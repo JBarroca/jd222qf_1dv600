@@ -66,7 +66,6 @@ public class Hangman {
 					if(wantsToReset()) {
 						resetGame();
 						startMenu();
-						//*******************
 					} else {
 						continue;
 					}
@@ -179,7 +178,6 @@ public class Hangman {
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
 		this.wordHasBeenFound = false;
-		//startMenu();
 	}
 		
 	public boolean wantsToQuit() {
@@ -256,15 +254,12 @@ public class Hangman {
 	    do {
 		    System.out.println("Please press a key to select an option: ");
 		    System.out.println("1 - Return to Start menu");
-		    System.out.println("2 - View High Scores");
 		    System.out.println("0 - Quit the application");
 		    System.out.print("-> ");
 		    
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
 		    	startMenu();
-	    	} else if (input.equals("2")) {
-	    		highScoreMenu();
 	    	} else if (input.equals("0")) {
 	    		if(wantsToQuit()) {
 	    			quitGame();
@@ -275,7 +270,7 @@ public class Hangman {
     		} else {
 	    		System.out.print("Invalid input.\n");	    		
     		}
-	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+	    } while (!(input.equals("1") || input.equals("0")));
 	}	
 		
 	public void newGameMenu() throws IOException {
