@@ -96,7 +96,7 @@ public class Score {
 	
 	/**
 	 * Returns true if the current score is, at least, the 5th highest recorded.
-	 * @param scoreList	a sorted ArrayList contatining every previous score
+	 * @param scoreList	a sorted ArrayList containing every previous score
 	 * @param score		the current game score
 	 * @return			true if <code>score</code> is in the top 5 highest scores
 	 */
