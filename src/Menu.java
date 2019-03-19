@@ -1,4 +1,7 @@
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Menu {
 
@@ -58,6 +61,42 @@ public class Menu {
 		loseBoard.append("==========================================================================================\n");
 		System.out.println(fillVoidSpace() + loseBoard.toString());
 	}
+	
+	public static void showHighScoresSingle() {
+		Map<String, Integer> highScores = new HashMap<>();
+		try {
+			highScores = Score.readHighScoreFile(Score.getHighScoreFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String[] names = new String[5];
+		int[] scores = new int[5];
+		
+		int i = 0;
+		for(Map.Entry<String, Integer> entry:highScores.entrySet()) {
+			names[i] = entry.getKey();
+			scores[i] = entry.getValue();
+			i++;
+			if (i == 5) {
+				break;
+			}
+		}
+		
+		StringBuilder table = new StringBuilder();
+		table.append("\n");
+		table.append("========== HIGH SCORES (single games) ==========\n");
+		table.append("||    -- POINTS --  -- PLAYER --                       \n");
+		table.append("||                                                     \n");
+		table.append("|| 1 - " + scores[0] + " points    - " + names[0] + "  \n");
+		table.append("|| 2 - " + scores[1] + " points    - " + names[1] + "  \n");
+		table.append("|| 3 - " + scores[2] + " points    - " + names[2] + "  \n");
+		table.append("|| 4 - " + scores[3] + " points    - " + names[3] + "  \n");
+		table.append("|| 5 - " + scores[4] + " points    - " + names[4] + "  \n");
+		table.append("||                                                     \n");
+		table.append("================================================\n");
+		System.out.println(fillVoidSpace() + table.toString());
+	}
+	
 	
 	public static void showStartMenu() {
 		StringBuilder menu = new StringBuilder();

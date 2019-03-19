@@ -1,9 +1,8 @@
-import java.io.File;
 import java.io.IOException;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		
 		/*
 		Score scr = new Score(2);
@@ -21,7 +20,11 @@ public class Main {
 		*/
 		
 		Hangman game = new Hangman();
-		game.startProgram();
+		try {
+			game.startMenu();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
