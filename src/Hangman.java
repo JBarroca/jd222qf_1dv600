@@ -11,6 +11,7 @@ public class Hangman {
 	private boolean wordHasBeenFound= false;
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
+	//private int gameNumber = 0;
 	
 	public Hangman() {
 		Word gameWord = new Word();
@@ -47,7 +48,7 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));  
 	}
 	
-	public void playSingleGame() throws IOException {
+	public void playSingleGame(int gameNumber) throws IOException {
 		String message = "let's play!";
 		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
 		
@@ -61,7 +62,16 @@ public class Hangman {
 				if (wordIsGuessed(playerInput)) {
 					this.wordHasBeenFound = true;
 					this.playerScore.onRightWordGuess(this.triesLeft);
-					winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore);
+					//wins a single-word game
+					if (gameNumber == 0) {
+						winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore);						
+					//wins round 1-4 of a 5-word game
+					} else if (gameNumber > 0 && gameNumber < 5) {
+						win5WordRound(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);
+					//wins round 5 of 5-word game
+					} else if (gameNumber == 5) {
+						win5WordGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);
+					}					
 				} else if (playerInput.equals("resetgame")) {
 					if(wantsToReset()) {
 						resetGame();
@@ -92,7 +102,16 @@ public class Hangman {
 						//check for completed word
 						if(wordIsGuessed(updateWord(this.word, this.guessedLetters))) {
 							this.wordHasBeenFound = true;
-							winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore);
+							//wins a single-word game
+							if (gameNumber == 0) {
+								winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore);								
+							//wins round 1-4 of a 5-word game
+							} else if (gameNumber > 0 && gameNumber < 5) {
+								win5WordRound(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);
+							//wins round 5 of a 5-word game
+							} else if (gameNumber == 5) {
+								win5WordGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);
+							}
 						} else {
 							message = ":) Nice guess!";							
 						}
@@ -113,7 +132,11 @@ public class Hangman {
 		}
 		//player runs out of tries (i.e., player looses)
 		if (this.triesLeft == 0) {
-			loseGame();
+			if (gameNumber == 0 || gameNumber == 5) {
+				loseGame();
+			} else {
+				lose5WordRound(gameNumber);
+			}
 		}
 	}
 	
@@ -178,6 +201,7 @@ public class Hangman {
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
 		this.wordHasBeenFound = false;
+		//this.gameNumber = 0;
 	}
 		
 	public boolean wantsToQuit() {
@@ -245,6 +269,94 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
 
+	public void win5WordRound(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
+		Menu.showWinGame(word, triesLeft, playerScore, false);
+		String input;
+
+		do {
+		    System.out.println("Please press a key to select an option: ");
+		    System.out.println("1 - Continue to round " + (gameNumber + 1) + " of 5");
+		    System.out.println("2 - Leave the current 5-word game and return to the Start menu");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+		    	resetGame();
+	    		startNew5WordRound(playerScore, (gameNumber + 1));
+	    	} else if (input.equals("2")) {
+				if(wantsToReset()) {
+					resetGame();
+					startMenu();
+				} else {
+					input = "-1";
+					continue;
+				}
+	    	} else if (input.equals("0")) {
+		    	if(wantsToQuit()) {
+		    		quitGame();
+		    	} else {
+		    		input = "-1";
+		    		continue;		    		
+		    	}
+	    	} else {
+	    		System.out.print("Invalid input.\n");
+	    		continue;
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+	}
+	
+	public void startNew5WordRound(Score currentScore, int nextRound) throws IOException {
+		resetGame();
+		this.playerScore = currentScore;
+		playSingleGame(nextRound);
+	}
+	
+	public void win5WordGame(String word, int triesLeft, Score currentScore, int gameNumber) throws IOException {
+		//HIGH-SCORE FUNCTIONALITY FOR 5-WORD GAMES
+		//método isHighScore para 5WG
+		//Menu.showWinGame(word, triesLeft, playerScore, isHighScore);
+		
+		String input;
+		
+		/* ADAPTAR PARA 5WG
+		if(isHighScore) {
+			System.out.print("Please enter your nickname to register your highscore: ");
+			input = this.gameScanner.next();
+			Score.registerHighScore(input, playerScore);
+			System.out.println();
+		}
+		*/
+		
+		resetGame();
+		
+	    do {
+		    System.out.println("Please press a key to select an option: ");
+		    System.out.println("1 - Return to Start menu");
+		    System.out.println("2 - View High Scores");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+		    	startMenu();
+	    	} else if (input.equals("2")) {
+	    		highScoreMenu();
+	    	} else if (input.equals("0")) {
+		    	if(wantsToQuit()) {
+		    		quitGame();
+		    	} else {
+		    		input = "-1";
+		    		continue;		    		
+		    	}
+	    	} else {
+	    		System.out.print("Invalid input.\n");
+	    		continue;
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+		
+	}
+	
 	public void loseGame() throws IOException {
 		Menu.showLoseGame(this.word);
 	    resetGame();
@@ -272,7 +384,45 @@ public class Hangman {
     		}
 	    } while (!(input.equals("1") || input.equals("0")));
 	}	
+	
+	public void lose5WordRound(int gameNumber) throws IOException {
+		Menu.showLoseGame(this.word);
+		String input;
+
+		do {
+		    System.out.println("Please press a key to select an option: ");
+		    System.out.println("1 - Continue to round " + (gameNumber + 1) + " of 5");
+		    System.out.println("2 - Leave the current 5-word game and return to the Start menu");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+		    	resetGame();
+	    		startNew5WordRound(playerScore, (gameNumber + 1));
+	    	} else if (input.equals("2")) {
+				if(wantsToReset()) {
+					resetGame();
+					startMenu();
+				} else {
+					input = "-1";
+					continue;
+				}
+	    	} else if (input.equals("0")) {
+		    	if(wantsToQuit()) {
+		    		quitGame();
+		    	} else {
+		    		input = "-1";
+		    		continue;		    		
+		    	}
+	    	} else {
+	    		System.out.print("Invalid input.\n");
+	    		continue;
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 		
+	}
+	
 	public void newGameMenu() throws IOException {
 	    Menu.showNewGameMenu();
 	    String input;
@@ -281,9 +431,9 @@ public class Hangman {
 		    System.out.print("\nPlease press a key to select an option: ");
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
-		    	playSingleGame();
+		    	playSingleGame(0);
 	    	} else if (input.equals("2")) {
-		    	System.out.println("To be implemented");
+	    		playSingleGame(1);
 	    	} else if (input.equals("0")) {
 		    	startMenu();
 	    	} else {

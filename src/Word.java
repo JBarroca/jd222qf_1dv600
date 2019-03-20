@@ -7,22 +7,31 @@ import java.util.Map;
 import java.util.Random;
 
 public class Word {
+	private String word;
+	private int bonusPoints;
+	
+	public Word() {
+		try {
+			this.word = obtainWord();
+			this.bonusPoints = calculateBonusPoints();
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		}
+    
+		System.out.println("word: " + this.word);
+		System.out.println("word points: " + this.bonusPoints); 
+	}
   
-  private String word;
-  private int bonusPoints;
-
-  public Word() {
-    try {
-      this.word = obtainWord();
-      this.bonusPoints = calculateBonusPoints();
-    } catch (FileNotFoundException ex) {
-      ex.printStackTrace();
-    }
-    
-    System.out.println("word: " + this.word);
-    System.out.println("word points: " + this.bonusPoints);
-    
-  }
+	public Word(String word) {
+		this.word = word;
+		try {
+			this.bonusPoints = calculateBonusPoints();		  
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("word: " + this.word);
+		System.out.println("word points: " + this.bonusPoints); 	  
+	}
   
   /**
    * Returns this object's word.
@@ -95,7 +104,6 @@ public class Word {
     }
     */
     
-
     char[] wordChars = this.word.toCharArray();
     int wordPoints = 0;
     for(int i = 0; i < wordChars.length; i++) {

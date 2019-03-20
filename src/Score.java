@@ -22,14 +22,25 @@ public class Score {
 		this.score = wordScore;
 	}
 	
+	/**
+	 * Returns the numerical value associated with this Score
+	 * @return	integer representing the current Score
+	 */
 	public int getScore() {
 		return this.score;
 	}
 	
+	/**
+	 * Adds 20 to the current score after a correct guess.
+	 */
 	public void onRightTry() {
 		this.score += 20;
 	}
 	
+	/**
+	 * Subtracts 20 to the current score after a wrong guess. If the score is
+	 * less than 20, the score becomes 0.
+	 */
 	public void onWrongTry() {
 		if (this.score - 20 < 0) {
 			this.score = 0;
@@ -38,10 +49,19 @@ public class Score {
 		}
 	}
 	
+	/**
+	 * After the player correctly guesses the entire hidden word, adds a bonus to
+	 * the score of 100 plus 10 points for each remaining try.
+	 * @param triesLeft		the number of tries remaining in the game
+	 */
 	public void onRightWordGuess(int triesLeft) {
 		this.score += (100 + triesLeft*10);
 	}
 	
+	/**
+	 * After the player unsuccessfully tries to guess the entire hidden word,
+	 * subtracts 40 from the current score. If it's less than 40, becomes 0.
+	 */
 	public void onWrongWordGuess() {
 		if (this.score - 40 < 0) {
 			this.score = 0;
@@ -125,6 +145,7 @@ public class Score {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Highscore successfully registered as " + playerName + "!");
 	}
 	
 	/**

@@ -19,7 +19,7 @@ public class Main {
 		System.out.println(scr.isHighScore());
 		*/
 		
-		Hangman game = new Hangman();
+		Hangman game = new Hangman("bee", new Word("bee").getBonusPoints());
 		try {
 			game.startMenu();
 		} catch (IOException e) {
