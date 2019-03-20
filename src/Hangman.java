@@ -11,7 +11,6 @@ public class Hangman {
 	private boolean wordHasBeenFound= false;
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
-	//private int gameNumber = 0;
 	
 	public Hangman() {
 		Word gameWord = new Word();
@@ -24,6 +23,10 @@ public class Hangman {
 		this.playerScore = new Score(score);
 	}
 	
+	/**
+	 * Exhibits the start menu and receives player input
+	 * @throws IOException
+	 */
 	public void startMenu() throws IOException {
 	    Menu.showStartMenu();
 	    String input;
@@ -48,6 +51,60 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));  
 	}
 	
+	/**
+	 * Displays the New Game menu and receives input from the player
+	 * @throws IOException
+	 */
+	public void newGameMenu() throws IOException {
+	    Menu.showNewGameMenu();
+	    String input;
+	    
+	    do {
+		    System.out.print("\nPlease press a key to select an option: ");
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+		    	playSingleGame(0);
+	    	} else if (input.equals("2")) {
+	    		playSingleGame(1);
+	    	} else if (input.equals("0")) {
+		    	startMenu();
+	    	} else {
+	    		System.out.print("Invalid input.\n");	    		
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+	}
+	
+	/**
+	 * Displays the High Score menu and receives input from the player
+	 * @throws IOException
+	 */
+	public void highScoreMenu() throws IOException {
+	    Menu.showHighScoreMenu();
+	    String input;
+	    
+	    do {
+		    System.out.print("\nPlease press a key to select an option: ");
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+	    		highScoresTable(0);
+	    	} else if (input.equals("2")) {
+	    		highScoresTable(1);
+	    	} else if (input.equals("0")) {
+	    		startMenu();
+	    	} else {
+	    		System.out.print("Invalid input.\n");	    		
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+	}
+	
+	/**
+	 * Runs through a round of the game, receiving player input until the word
+	 * is guessed (triggering a win game method) or the player runs out of tries
+	 * and loses (triggering a lose game method).
+	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5)
+	 * @throws IOException
+	 */
 	public void playSingleGame(int gameNumber) throws IOException {
 		String message = "let's play!";
 		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message, gameNumber);
@@ -62,16 +119,13 @@ public class Hangman {
 				if (wordIsGuessed(playerInput)) {
 					this.wordHasBeenFound = true;
 					this.playerScore.onRightWordGuess(this.triesLeft);
-					//wins a single-word game
-					if (gameNumber == 0) {
+					//wins a single-word game or the final round of a 5-word game
+					if (gameNumber == 0 || gameNumber == 5) {
 						winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);						
 					//wins round 1-4 of a 5-word game
 					} else if (gameNumber > 0 && gameNumber < 5) {
 						win5WordRound(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);
-					//wins round 5 of 5-word game
-					} else if (gameNumber == 5) {
-						win5WordGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);
-					}					
+					}				
 				} else if (playerInput.equals("resetgame")) {
 					if(wantsToReset()) {
 						resetGame();
@@ -103,14 +157,11 @@ public class Hangman {
 						if(wordIsGuessed(updateWord(this.word, this.guessedLetters))) {
 							this.wordHasBeenFound = true;
 							//wins a single-word game
-							if (gameNumber == 0) {
+							if (gameNumber == 0 || gameNumber == 5) {
 								winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);								
 							//wins round 1-4 of a 5-word game
 							} else if (gameNumber > 0 && gameNumber < 5) {
 								win5WordRound(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);
-							//wins round 5 of a 5-word game
-							} else if (gameNumber == 5) {
-								win5WordGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);
 							}
 						} else {
 							message = ":) Nice guess!";							
@@ -172,10 +223,19 @@ public class Hangman {
 		return (Character.isLetter(input.charAt(0)) && !guessedLetters.contains(input));
 	}	
 	
+	/**
+	 * Returns true if the player's input matches the current game word
+	 * @param guess		The previous input of the player
+	 * @return	true if the player's input matches the current game, false otherwise
+	 */
 	public boolean wordIsGuessed(String guess) {
 		return guess.equalsIgnoreCase(this.word);
 	}
 	
+	/**
+	 * Returns true if the player confirms he/she wants to reset, false otherwise
+	 * @return true if the player confirms he/she wants to reset, false otherwise
+	 */
 	public boolean wantsToReset() {
 		System.out.print("Do you really want to end this game and return to the start menu? (\"y\" = yes, \"n\" = no): ");
 		boolean wantsToReset = false;
@@ -194,6 +254,11 @@ public class Hangman {
 		return wantsToReset;
 	}
 	
+	/**
+	 * Resets the game (reinitialises class variables to the beginning state and
+	 * obtains a new game word)
+	 * @throws IOException
+	 */
 	public void resetGame() throws IOException {
 		Word newGameWord = new Word();
 		this.word = newGameWord.getWord();
@@ -201,9 +266,12 @@ public class Hangman {
 		this.triesLeft = 9;
 		this.guessedLetters.clear();
 		this.wordHasBeenFound = false;
-		//this.gameNumber = 0;
 	}
-		
+	
+	/**
+	 * Returns true if the player confirms he/she wants to quit, false otherwise
+	 * @return true if the player confirms he/she wants to quit, false otherwise
+	 */
 	public boolean wantsToQuit() {
 		System.out.print("Do you really want to quit the application? (\"y\" = yes, \"n\" = no): ");
 		boolean wantsToQuit = false;
@@ -222,22 +290,35 @@ public class Hangman {
 		return wantsToQuit;	
 	}
 	
+	/**
+	 * Terminates the application (includes closing the game Scanner instance)
+	 */
 	public void quitGame() {
 		System.out.println("\nBye bye!");
 		this.gameScanner.close();
 		System.exit(0);
 	}
 	
+	/**
+	 * Displays the win game board. If the player has reached a new high score for
+	 * the current game type, invokes methods to register the high score. Receives
+	 * input from the player for further navigation.
+	 * @param word			the current game word
+	 * @param triesLeft		the number of remaining tries
+	 * @param playerScore	the current score
+	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5)
+	 * @throws IOException
+	 */
 	public void winGame(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
-		
-		boolean isHighScore = playerScore.isHighScore();
+		boolean isHighScore = playerScore.isHighScore(gameNumber);
 		Menu.showWinGame(word, triesLeft, playerScore, isHighScore, gameNumber);
 		String input;
 	    
 		if(isHighScore) {
 			System.out.print("Please enter your nickname to register your highscore: ");
 			input = this.gameScanner.next();
-			Score.registerHighScore(input, playerScore);
+			Score.registerHighScore(input, playerScore, gameNumber);
 			System.out.println();
 		}
 		
@@ -269,6 +350,16 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
 
+	/**
+	 * Displays the win game board after a single round of a 5-word game, and
+	 * receives input from the player for further navigation
+	 * @param word			the current game word
+	 * @param triesLeft		the number of remaining tries
+	 * @param playerScore	the current score
+	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5)
+	 * @throws IOException
+	 */
 	public void win5WordRound(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
 		Menu.showWinGame(word, triesLeft, playerScore, false, gameNumber);
 		String input;
@@ -305,57 +396,24 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 	}
 	
+	/**
+	 * Starts a new round of a 5-word game, passing the current score to the 
+	 * next round
+	 * @param currentScore	the current score
+	 * @param nextRound		the number of the next round
+	 * @throws IOException
+	 */
 	public void startNew5WordRound(Score currentScore, int nextRound) throws IOException {
 		resetGame();
 		this.playerScore = new Score(this.playerScore.getScore() + currentScore.getScore());
 		playSingleGame(nextRound);
 	}
 	
-	public void win5WordGame(String word, int triesLeft, Score currentScore, int gameNumber) throws IOException {
-		//HIGH-SCORE FUNCTIONALITY FOR 5-WORD GAMES
-		//método isHighScore para 5WG
-		//Menu.showWinGame(word, triesLeft, playerScore, isHighScore);
-		
-		String input;
-		
-		/* ADAPTAR PARA 5WG
-		if(isHighScore) {
-			System.out.print("Please enter your nickname to register your highscore: ");
-			input = this.gameScanner.next();
-			Score.registerHighScore(input, playerScore);
-			System.out.println();
-		}
-		*/
-		
-		resetGame();
-		
-	    do {
-		    System.out.println("Please press a key to select an option: ");
-		    System.out.println("1 - Return to Start menu");
-		    System.out.println("2 - View High Scores");
-		    System.out.println("0 - Quit the application");
-		    System.out.print("-> ");
-
-	    	input = this.gameScanner.next();
-	    	if (input.equals("1")) {
-		    	startMenu();
-	    	} else if (input.equals("2")) {
-	    		highScoreMenu();
-	    	} else if (input.equals("0")) {
-		    	if(wantsToQuit()) {
-		    		quitGame();
-		    	} else {
-		    		input = "-1";
-		    		continue;		    		
-		    	}
-	    	} else {
-	    		System.out.print("Invalid input.\n");
-	    		continue;
-	    	}
-	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
-		
-	}
-	
+	/**
+	 * Displays the lose game after a single-word game and receives input from
+	 * the player for further navigation.
+	 * @throws IOException
+	 */
 	public void loseGame() throws IOException {
 		Menu.showLoseGame(this.word, 0, this.playerScore);
 	    resetGame();
@@ -384,6 +442,14 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("0")));
 	}	
 	
+	/**
+	 * Displays the lose game board after a round of a 5-word game and receives
+	 * input from the player for further navigation.
+	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5)
+	 * @param currentScore	the current score
+	 * @throws IOException
+	 */
 	public void lose5WordRound(int gameNumber, Score currentScore) throws IOException {
 		Menu.showLoseGame(this.word, gameNumber, currentScore);
 		String input;
@@ -420,47 +486,17 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 		
 	}
-	
-	public void newGameMenu() throws IOException {
-	    Menu.showNewGameMenu();
-	    String input;
-	    
-	    do {
-		    System.out.print("\nPlease press a key to select an option: ");
-	    	input = this.gameScanner.next();
-	    	if (input.equals("1")) {
-		    	playSingleGame(0);
-	    	} else if (input.equals("2")) {
-	    		playSingleGame(1);
-	    	} else if (input.equals("0")) {
-		    	startMenu();
-	    	} else {
-	    		System.out.print("Invalid input.\n");	    		
-	    	}
-	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
-	}
-	
-	public void highScoreMenu() throws IOException {
-	    Menu.showHighScoreMenu();
-	    String input;
-	    
-	    do {
-		    System.out.print("\nPlease press a key to select an option: ");
-	    	input = this.gameScanner.next();
-	    	if (input.equals("1")) {
-	    		highScoresSingleMenu();
-	    	} else if (input.equals("2")) {
-	    		System.out.println("To be implemented");
-	    	} else if (input.equals("0")) {
-	    		startMenu();
-	    	} else {
-	    		System.out.print("Invalid input.\n");	    		
-	    	}
-	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
-	}
-	
-	public void highScoresSingleMenu() throws IOException {
-		Menu.showHighScoresSingle();
+		
+	/**
+	 * Builds and displays the high scores table the player wants to see (either
+	 * single-game high scores or 5-word games high scores), and receives input
+	 * from the player for further navigation.
+	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5)
+	 * @throws IOException
+	 */
+	public void highScoresTable(int gameNumber) throws IOException {
+		Menu.showHighScoreTable(gameNumber);
 		String input;
 		
 	    do {

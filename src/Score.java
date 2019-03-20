@@ -73,22 +73,35 @@ public class Score {
 	/**
 	 * Returns true if the current game score is on the top 5 highest scores.
 	 * @return	true if the current game score is on the top 5 highest scores
-	 * @throws IOException
 	 */
-	public boolean isHighScore() throws IOException {
-		File highScoreFile = getHighScoreFile();
-		ArrayList<Integer> previousScores = getScoresList(highScoreFile);
+	public boolean isHighScore(int gameNumber) {
+		ArrayList<Integer> previousScores = new ArrayList<>();
+		try {
+			File highScoreFile = getHighScoreFile(gameNumber);
+			previousScores = getScoresList(highScoreFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return isTop5Score(previousScores, this.score);
 	}
 	
 	/**
 	 * If a highscores file already exists, returns a File object referencing it.
 	 * If none is found, creates the file and returns the File object referencing it.
+	 * @param	gameNumber	an integer indicating if the finished game was a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5). 
 	 * @return	File object referencing the high scores text file.
 	 * @throws IOException
 	 */
-	public static File getHighScoreFile() throws IOException {
-		File file = new File("resources/highscore.txt");
+	public static File getHighScoreFile(int gameNumber) throws IOException {
+		String path = "";
+		if (gameNumber == 0) {
+			path = "resources/highscore.txt";
+		} else {
+			path = "resources/highscore5wordgame.txt";
+		}
+		
+		File file = new File(path);
 		if (file.exists()) {
 			return file;
 		} else {
@@ -133,10 +146,19 @@ public class Score {
 	 * name and current game score.
 	 * @param playerName	the Player's specified name
 	 * @param score			the score to be registered
+	 * @param gameNumber	an integer indicating if the ongoing game was a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5).
 	 */
-	public static void registerHighScore(String playerName, Score score) {
+	public static void registerHighScore(String playerName, Score score, int gameNumber) {
+		String path = "";
+		if (gameNumber == 0) {
+			path = "resources/highscore.txt";
+		} else {
+			path = "resources/highscore5wordgame.txt";
+		}
+		
 		try {			
-			PrintWriter scoreWriter = new PrintWriter(new BufferedWriter(new FileWriter("resources/highscore.txt", true)));
+			PrintWriter scoreWriter = new PrintWriter(new BufferedWriter(new FileWriter(path, true)));
 			scoreWriter.print(playerName + " ");
 			scoreWriter.println(score.getScore());
 			scoreWriter.close();

@@ -82,13 +82,6 @@ public class Word {
     }
     scanFirstLetter.close();
     
-    /*
-    System.out.println("First letters' points:");
-    for (Object key : firstLetterPoints.keySet()) {
-      System.out.println(key.toString() + " : " + firstLetterPoints.get(key).toString());
-  	}
-    */
-    
     //creating map of points for remaining letters
     Scanner scanOthers = new Scanner(new File("resources/letterFreq.txt"));
     Map<String, Integer> otherLetterPoints = new Hashtable<String, Integer>();
@@ -97,13 +90,7 @@ public class Word {
     }
     scanOthers.close();
     
-    /*
-    System.out.println("Other letters' points:");
-    for (Object key : otherLetterPoints.keySet()) {
-      System.out.println(key.toString() + " : " + otherLetterPoints.get(key).toString());
-    }
-    */
-    
+    //adding the points for this particular Word instance
     char[] wordChars = this.word.toCharArray();
     int wordPoints = 0;
     for(int i = 0; i < wordChars.length; i++) {
