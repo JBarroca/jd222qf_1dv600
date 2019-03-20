@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -25,9 +24,8 @@ public class Hangman {
 	
 	/**
 	 * Exhibits the start menu and receives player input
-	 * @throws IOException
 	 */
-	public void startMenu() throws IOException {
+	public void startMenu() {
 	    Menu.showStartMenu();
 	    String input;
 	    
@@ -53,9 +51,8 @@ public class Hangman {
 	
 	/**
 	 * Displays the New Game menu and receives input from the player
-	 * @throws IOException
 	 */
-	public void newGameMenu() throws IOException {
+	public void newGameMenu() {
 	    Menu.showNewGameMenu();
 	    String input;
 	    
@@ -76,9 +73,8 @@ public class Hangman {
 	
 	/**
 	 * Displays the High Score menu and receives input from the player
-	 * @throws IOException
 	 */
-	public void highScoreMenu() throws IOException {
+	public void highScoreMenu() {
 	    Menu.showHighScoreMenu();
 	    String input;
 	    
@@ -103,9 +99,8 @@ public class Hangman {
 	 * and loses (triggering a lose game method).
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
-	 * @throws IOException
 	 */
-	public void playSingleGame(int gameNumber) throws IOException {
+	public void playSingleGame(int gameNumber) {
 		String message = "let's play!";
 		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message, gameNumber);
 		
@@ -257,9 +252,8 @@ public class Hangman {
 	/**
 	 * Resets the game (reinitialises class variables to the beginning state and
 	 * obtains a new game word)
-	 * @throws IOException
 	 */
-	public void resetGame() throws IOException {
+	public void resetGame() {
 		Word newGameWord = new Word();
 		this.word = newGameWord.getWord();
 		this.playerScore = new Score(newGameWord.getBonusPoints());
@@ -308,9 +302,8 @@ public class Hangman {
 	 * @param playerScore	the current score
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
-	 * @throws IOException
 	 */
-	public void winGame(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
+	public void winGame(String word, int triesLeft, Score playerScore, int gameNumber) {
 		boolean isHighScore = playerScore.isHighScore(gameNumber);
 		Menu.showWinGame(word, triesLeft, playerScore, isHighScore, gameNumber);
 		String input;
@@ -358,9 +351,8 @@ public class Hangman {
 	 * @param playerScore	the current score
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
-	 * @throws IOException
 	 */
-	public void win5WordRound(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
+	public void win5WordRound(String word, int triesLeft, Score playerScore, int gameNumber) {
 		Menu.showWinGame(word, triesLeft, playerScore, false, gameNumber);
 		String input;
 
@@ -401,9 +393,8 @@ public class Hangman {
 	 * next round
 	 * @param currentScore	the current score
 	 * @param nextRound		the number of the next round
-	 * @throws IOException
 	 */
-	public void startNew5WordRound(Score currentScore, int nextRound) throws IOException {
+	public void startNew5WordRound(Score currentScore, int nextRound) {
 		resetGame();
 		this.playerScore = new Score(this.playerScore.getScore() + currentScore.getScore());
 		playSingleGame(nextRound);
@@ -412,9 +403,8 @@ public class Hangman {
 	/**
 	 * Displays the lose game after a single-word game and receives input from
 	 * the player for further navigation.
-	 * @throws IOException
 	 */
-	public void loseGame() throws IOException {
+	public void loseGame() {
 		Menu.showLoseGame(this.word, 0, this.playerScore);
 	    resetGame();
 		
@@ -448,9 +438,8 @@ public class Hangman {
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
 	 * @param currentScore	the current score
-	 * @throws IOException
 	 */
-	public void lose5WordRound(int gameNumber, Score currentScore) throws IOException {
+	public void lose5WordRound(int gameNumber, Score currentScore) {
 		Menu.showLoseGame(this.word, gameNumber, currentScore);
 		String input;
 
@@ -493,9 +482,8 @@ public class Hangman {
 	 * from the player for further navigation.
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
-	 * @throws IOException
 	 */
-	public void highScoresTable(int gameNumber) throws IOException {
+	public void highScoresTable(int gameNumber) {
 		Menu.showHighScoreTable(gameNumber);
 		String input;
 		

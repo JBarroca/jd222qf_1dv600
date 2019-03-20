@@ -114,12 +114,12 @@ public class Score {
 	 * Returns a sorted ArrayList containing every previous score registered
 	 * @param scoreFile	File object referencing the highscores text file
 	 * @return	a sorted ArrayList containing every previous score	
-	 * @throws FileNotFoundException	if no high scores text file is found
 	 */
-	public ArrayList<Integer> getScoresList(File scoreFile) throws FileNotFoundException {
+	public ArrayList<Integer> getScoresList(File scoreFile) {
 		ArrayList<Integer> scoreList = new ArrayList<>();
 		
 		Map<String, Integer> scoresMap = readHighScoreFile(scoreFile);
+		
 		for(Map.Entry<String, Integer> entry : scoresMap.entrySet()) {
 			scoreList.add(entry.getValue());
 		}
