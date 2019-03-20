@@ -50,7 +50,7 @@ public class Hangman {
 	
 	public void playSingleGame(int gameNumber) throws IOException {
 		String message = "let's play!";
-		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
+		Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message, gameNumber);
 		
 		while (this.triesLeft > 0 && !this.wordHasBeenFound) {
 			System.out.println("\nPlease enter a letter or guess the entire word");
@@ -64,7 +64,7 @@ public class Hangman {
 					this.playerScore.onRightWordGuess(this.triesLeft);
 					//wins a single-word game
 					if (gameNumber == 0) {
-						winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore);						
+						winGame(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);						
 					//wins round 1-4 of a 5-word game
 					} else if (gameNumber > 0 && gameNumber < 5) {
 						win5WordRound(playerInput.toUpperCase(), this.triesLeft, this.playerScore, gameNumber);
@@ -104,7 +104,7 @@ public class Hangman {
 							this.wordHasBeenFound = true;
 							//wins a single-word game
 							if (gameNumber == 0) {
-								winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore);								
+								winGame(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);								
 							//wins round 1-4 of a 5-word game
 							} else if (gameNumber > 0 && gameNumber < 5) {
 								win5WordRound(updateWord(this.word, this.guessedLetters), this.triesLeft, this.playerScore, gameNumber);
@@ -128,14 +128,14 @@ public class Hangman {
 					message = "Enter a valid letter that you haven't tried before.";
 				}
 			}
-			Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message);
+			Menu.showGameRound(updateWord(this.word, this.guessedLetters), this.guessedLetters, this.triesLeft, message, gameNumber);
 		}
 		//player runs out of tries (i.e., player looses)
 		if (this.triesLeft == 0) {
 			if (gameNumber == 0 || gameNumber == 5) {
 				loseGame();
 			} else {
-				lose5WordRound(gameNumber);
+				lose5WordRound(gameNumber, this.playerScore);
 			}
 		}
 	}
@@ -228,10 +228,10 @@ public class Hangman {
 		System.exit(0);
 	}
 	
-	public void winGame(String word, int triesLeft, Score playerScore) throws IOException {
+	public void winGame(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
 		
 		boolean isHighScore = playerScore.isHighScore();
-		Menu.showWinGame(word, triesLeft, playerScore, isHighScore);
+		Menu.showWinGame(word, triesLeft, playerScore, isHighScore, gameNumber);
 		String input;
 	    
 		if(isHighScore) {
@@ -270,7 +270,7 @@ public class Hangman {
 	}
 
 	public void win5WordRound(String word, int triesLeft, Score playerScore, int gameNumber) throws IOException {
-		Menu.showWinGame(word, triesLeft, playerScore, false);
+		Menu.showWinGame(word, triesLeft, playerScore, false, gameNumber);
 		String input;
 
 		do {
@@ -282,7 +282,6 @@ public class Hangman {
 
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
-		    	resetGame();
 	    		startNew5WordRound(playerScore, (gameNumber + 1));
 	    	} else if (input.equals("2")) {
 				if(wantsToReset()) {
@@ -308,7 +307,7 @@ public class Hangman {
 	
 	public void startNew5WordRound(Score currentScore, int nextRound) throws IOException {
 		resetGame();
-		this.playerScore = currentScore;
+		this.playerScore = new Score(this.playerScore.getScore() + currentScore.getScore());
 		playSingleGame(nextRound);
 	}
 	
@@ -358,7 +357,7 @@ public class Hangman {
 	}
 	
 	public void loseGame() throws IOException {
-		Menu.showLoseGame(this.word);
+		Menu.showLoseGame(this.word, 0, this.playerScore);
 	    resetGame();
 		
 		String input;
@@ -385,8 +384,8 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("0")));
 	}	
 	
-	public void lose5WordRound(int gameNumber) throws IOException {
-		Menu.showLoseGame(this.word);
+	public void lose5WordRound(int gameNumber, Score currentScore) throws IOException {
+		Menu.showLoseGame(this.word, gameNumber, currentScore);
 		String input;
 
 		do {
@@ -398,8 +397,7 @@ public class Hangman {
 
 	    	input = this.gameScanner.next();
 	    	if (input.equals("1")) {
-		    	resetGame();
-	    		startNew5WordRound(playerScore, (gameNumber + 1));
+	    		startNew5WordRound(currentScore, (gameNumber + 1));
 	    	} else if (input.equals("2")) {
 				if(wantsToReset()) {
 					resetGame();

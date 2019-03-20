@@ -7,10 +7,14 @@ public class Menu {
 
 	public Menu() {}
 	
-	public static void showGameRound(String gameWord, ArrayList<String> guessedLetters, int triesLeft, String message) {
+	public static void showGameRound(String gameWord, ArrayList<String> guessedLetters, int triesLeft, String message, int gameNumber) {
 		StringBuilder gameBoard = new StringBuilder();
 		gameBoard.append("\n");
-		gameBoard.append("========================================== SINGLE GAME ===================================\n");
+		if (gameNumber == 0) {
+			gameBoard.append("========================================== SINGLE GAME ===================================\n");			
+		} else {
+			gameBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");	
+		}
 		gameBoard.append("||                  ||                                                                    \n");
 		gameBoard.append("||                  || CURRENT WORD: " + gameWord + "                                     \n");
 		gameBoard.append("||                  ||                                                                    \n");
@@ -24,14 +28,18 @@ public class Menu {
 		System.out.println(fillVoidSpace() + gameBoard.toString());
 	}
 	
-	public static void showWinGame(String gameWord, int triesLeft, Score score, boolean isHighScore) {
+	public static void showWinGame(String gameWord, int triesLeft, Score score, boolean isHighScore, int gameNumber) {
 		String highScoreMessage = "";
 		if (isHighScore) {
 			highScoreMessage = "NEW HIGHSCORE!";
 		}
 		StringBuilder victoryBoard = new StringBuilder();
 		victoryBoard.append("\n");
-		victoryBoard.append("========================================== SINGLE GAME ===================================\n");
+		if (gameNumber == 0) {
+			victoryBoard.append("========================================== SINGLE GAME ===================================\n");			
+		} else {
+			victoryBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");			
+		}
 		victoryBoard.append("||                  ||                                                                    \n");
 		victoryBoard.append("||                  ||     ********************** YOU WON!!!! **********************      \n");
 		victoryBoard.append("||                  ||                                                                    \n");
@@ -45,16 +53,24 @@ public class Menu {
 		System.out.println(fillVoidSpace() + victoryBoard.toString());
 	}
 	
-	public static void showLoseGame(String gameWord) {
+	public static void showLoseGame(String gameWord, int gameNumber, Score score) {
 		StringBuilder loseBoard = new StringBuilder();
 		loseBoard.append("\n");
-		loseBoard.append("========================================== SINGLE GAME ===================================\n");
+		if (gameNumber == 0) {
+			loseBoard.append("========================================== SINGLE GAME ===================================\n");			
+		} else {
+			loseBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");			
+		}
 		loseBoard.append("||                  ||                                                                    \n");
 		loseBoard.append("||                  ||     ********************** YOU LOSE :( **********************      \n");
 		loseBoard.append("||                  ||                                                                    \n");
 		loseBoard.append("||                  || Word was " + gameWord.toUpperCase() + "                            \n");
 		loseBoard.append("||    (hangman)     ||                                                                    \n");
-		loseBoard.append("||                  ||                                                                    \n");
+		if (gameNumber == 0) {
+			loseBoard.append("||                  ||                                                                    \n");			
+		} else {
+			loseBoard.append("||                  || Current score: " + score.getScore() + "                            \n");			
+		}
 		loseBoard.append("||                  ||                                                                    \n");
 		loseBoard.append("||                  ||                                                                    \n");
 		loseBoard.append("||                  ||                                                                    \n");
