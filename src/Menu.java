@@ -140,13 +140,13 @@ public class Menu {
 			table.append("========== HIGH SCORES (5-word games) ==========\n");			
 		}
 		table.append("||                                                     \n");
-		table.append("||    -- POINTS --  -- PLAYER --                       \n");
+		table.append("||    --- SCORE ---  -- PLAYER --                       \n");
 		table.append("||                                                     \n");
-		table.append("|| 1 - " + scores[0] + " points    - " + names[0] + "  \n");
-		table.append("|| 2 - " + scores[1] + " points    - " + names[1] + "  \n");
-		table.append("|| 3 - " + scores[2] + " points    - " + names[2] + "  \n");
-		table.append("|| 4 - " + scores[3] + " points    - " + names[3] + "  \n");
-		table.append("|| 5 - " + scores[4] + " points    - " + names[4] + "  \n");
+		table.append("|| 1 - " + String.format("%4d", scores[0]) + " points    - " + names[0] + "  \n");
+		table.append("|| 2 - " + String.format("%4d", scores[1]) + " points    - " + names[1] + "  \n");
+		table.append("|| 3 - " + String.format("%4d", scores[2]) + " points    - " + names[2] + "  \n");
+		table.append("|| 4 - " + String.format("%4d", scores[3]) + " points    - " + names[3] + "  \n");
+		table.append("|| 5 - " + String.format("%4d", scores[4]) + " points    - " + names[4] + "  \n");
 		table.append("||                                                     \n");
 		table.append("================================================\n");
 		System.out.println(fillVoidSpace() + table.toString());
