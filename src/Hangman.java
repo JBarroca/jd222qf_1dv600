@@ -6,7 +6,7 @@ public class Hangman {
 
 	private Score playerScore;
 	private String word;
-	private int triesLeft = 9;
+	private int triesLeft = 10;
 	private boolean wordHasBeenFound= false;
 	private ArrayList<String> guessedLetters = new ArrayList<>();
 	private Scanner gameScanner = new Scanner(System.in);
@@ -178,8 +178,10 @@ public class Hangman {
 		}
 		//player runs out of tries (i.e., player looses)
 		if (this.triesLeft == 0) {
-			if (gameNumber == 0 || gameNumber == 5) {
+			if (gameNumber == 0) {
 				loseGame();
+			} else if (gameNumber == 5) {
+				lose5WordGame(this.word, this.triesLeft, this.playerScore, gameNumber);
 			} else {
 				lose5WordRound(gameNumber, this.playerScore);
 			}
@@ -257,7 +259,7 @@ public class Hangman {
 		Word newGameWord = new Word();
 		this.word = newGameWord.getWord();
 		this.playerScore = new Score(newGameWord.getBonusPoints());
-		this.triesLeft = 9;
+		this.triesLeft = 10;
 		this.guessedLetters.clear();
 		this.wordHasBeenFound = false;
 	}
@@ -405,7 +407,7 @@ public class Hangman {
 	 * the player for further navigation.
 	 */
 	public void loseGame() {
-		Menu.showLoseGame(this.word, 0, this.playerScore);
+		Menu.showLoseGame(this.word, 0, this.playerScore, this.triesLeft);
 	    resetGame();
 		
 		String input;
@@ -440,7 +442,7 @@ public class Hangman {
 	 * @param currentScore	the current score
 	 */
 	public void lose5WordRound(int gameNumber, Score currentScore) {
-		Menu.showLoseGame(this.word, gameNumber, currentScore);
+		Menu.showLoseGame(this.word, gameNumber, currentScore, this.triesLeft);
 		String input;
 
 		do {
@@ -475,7 +477,48 @@ public class Hangman {
 	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
 		
 	}
+	
+	public void lose5WordGame(String word, int triesLeft, Score currentScore, int gameNumber) {
+		Menu.showLoseGame(word, gameNumber, currentScore, triesLeft);
+		boolean isHighScore = playerScore.isHighScore(gameNumber);
+		String input;
+	    
+		if(isHighScore) {
+			System.out.println("NEW HIGHSCORE for 5-word games!");
+			System.out.print("Please enter your nickname to register your highscore: ");
+			input = this.gameScanner.next();
+			Score.registerHighScore(input, playerScore, gameNumber);
+			System.out.println();
+		}
 		
+		resetGame();
+		
+	    do {
+		    System.out.println("Please press a key to select an option: ");
+		    System.out.println("1 - Return to Start menu");
+		    System.out.println("2 - View High Scores");
+		    System.out.println("0 - Quit the application");
+		    System.out.print("-> ");
+
+	    	input = this.gameScanner.next();
+	    	if (input.equals("1")) {
+		    	startMenu();
+	    	} else if (input.equals("2")) {
+	    		highScoreMenu();
+	    	} else if (input.equals("0")) {
+		    	if(wantsToQuit()) {
+		    		quitGame();
+		    	} else {
+		    		input = "-1";
+		    		continue;		    		
+		    	}
+	    	} else {
+	    		System.out.print("Invalid input.\n");
+	    		continue;
+	    	}
+	    } while (!(input.equals("1") || input.equals("2") || input.equals("0")));
+	}
+	
 	/**
 	 * Builds and displays the high scores table the player wants to see (either
 	 * single-game high scores or 5-word games high scores), and receives input

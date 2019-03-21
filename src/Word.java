@@ -17,9 +17,6 @@ public class Word {
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 		}
-    
-		System.out.println("word: " + this.word);
-		System.out.println("word points: " + this.bonusPoints); 
 	}
   
 	public Word(String word) {
@@ -28,9 +25,7 @@ public class Word {
 			this.bonusPoints = calculateBonusPoints();		  
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
-		}
-		System.out.println("word: " + this.word);
-		System.out.println("word points: " + this.bonusPoints); 	  
+		}	  
 	}
   
   /**

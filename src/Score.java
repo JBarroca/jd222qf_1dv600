@@ -72,7 +72,9 @@ public class Score {
 	
 	/**
 	 * Returns true if the current game score is on the top 5 highest scores.
-	 * @return	true if the current game score is on the top 5 highest scores
+	 * @param gameNumber	an integer indicating if the finished game was a single-word
+	 * game (value 0) or a round of a 5-word game (values 1-5).
+	 * @return				true if the current game score is on the top 5 highest scores
 	 */
 	public boolean isHighScore(int gameNumber) {
 		ArrayList<Integer> previousScores = new ArrayList<>();
@@ -123,7 +125,6 @@ public class Score {
 		for(Map.Entry<String, Integer> entry : scoresMap.entrySet()) {
 			scoreList.add(entry.getValue());
 		}
-		System.out.println("scoreList: " + scoreList.toString());
 		return scoreList;
 	}
 	
@@ -191,11 +192,6 @@ public class Score {
 		// sorting the Map according to scores 
 		Map<String, Integer> scoresMapSorted = sortByScore(scoresMap1);
 	
-		// print the sorted map
-        for (Map.Entry<String, Integer> en : scoresMapSorted.entrySet()) { 
-            System.out.println("Key = " + en.getKey() +  
-                          ", Value = " + en.getValue()); 
-        } 
 		return scoresMapSorted;
 	}
 	

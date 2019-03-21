@@ -24,15 +24,15 @@ public class Menu {
 		} else {
 			gameBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");	
 		}
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  || CURRENT WORD: " + gameWord + "                                     \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  ||       -- " + message + " --                                        \n");
-		gameBoard.append("||    (hangman)     ||                                                                    \n");
-		gameBoard.append("||                  || Previous letters: " + guessedLetters.toString() + "                \n");
-		gameBoard.append("||                  ||                                                                    \n");
-		gameBoard.append("||                  || Number of tries left: " + triesLeft + "                            \n");
-		gameBoard.append("||                  ||                                                                    \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 1) + "||                                                                    \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 2) + "|| CURRENT WORD: " + gameWord + "                                     \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 3) + "||                                                                    \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 4) + "||       -- " + message + " --                                        \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 5) + "||                                                                    \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 6) + "|| Previous letters: " + guessedLetters.toString() + "                \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 7) + "||                                                                    \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 8) + "|| Number of tries left: " + triesLeft + "                            \n");
+		gameBoard.append("||" + Sketch.getSketch(triesLeft, 9) + "||                                                                    \n");
 		gameBoard.append("==========================================================================================");
 		System.out.println(fillVoidSpace() + gameBoard.toString());
 	}
@@ -51,6 +51,7 @@ public class Menu {
 		if (isHighScore) {
 			highScoreMessage = "NEW HIGHSCORE!";
 		}
+		
 		StringBuilder victoryBoard = new StringBuilder();
 		victoryBoard.append("\n");
 		if (gameNumber == 0) {
@@ -58,17 +59,18 @@ public class Menu {
 		} else {
 			victoryBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");			
 		}
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  ||     ********************** YOU WON!!!! **********************      \n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || You found " + gameWord + " in " + (10 - triesLeft) + " tries.      \n");
-		victoryBoard.append("||    (hangman)     ||                                                                    \n");
-		victoryBoard.append("||                  || Your score: " + score.getScore() + "                               \n");
-		victoryBoard.append("||                  ||                                                                    \n");
-		victoryBoard.append("||                  || " + highScoreMessage + "                                           \n");
-		victoryBoard.append("||                  ||                                                                    \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 1) + "||                                                                    \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 2) + "||     ********************** YOU WON!!!! **********************      \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 3) + "||                                                                    \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 4) + "|| You found " + gameWord + " in " + (10 - triesLeft) + " tries.      \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 5) + "||                                                                    \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 6) + "|| Your score: " + score.getScore() + "                               \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 7) + "||                                                                    \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 8) + "|| " + highScoreMessage + "                                           \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 9) + "||                                                                    \n");
 		victoryBoard.append("==========================================================================================\n");
 		System.out.println(fillVoidSpace() + victoryBoard.toString());
+		
 	}
 	
 	/**
@@ -77,8 +79,9 @@ public class Menu {
 	 * @param gameNumber	an integer indicating if the ongoing game is a single-word
 	 * game (value 0) or a round of a 5-word game (values 1-5)
 	 * @param score			the current score
+	 * @paran triesLeft		the number of tries left
 	 */
-	public static void showLoseGame(String gameWord, int gameNumber, Score score) {
+	public static void showLoseGame(String gameWord, int gameNumber, Score score, int triesLeft) {
 		StringBuilder loseBoard = new StringBuilder();
 		loseBoard.append("\n");
 		if (gameNumber == 0) {
@@ -86,19 +89,19 @@ public class Menu {
 		} else {
 			loseBoard.append("========================================== GAME " + gameNumber + " OF 5 ===================================\n");			
 		}
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  ||     ********************** YOU LOSE :( **********************      \n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  || Word was " + gameWord.toUpperCase() + "                            \n");
-		loseBoard.append("||    (hangman)     ||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 1) + "||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 2) + "||     ********************** YOU LOSE :( **********************      \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 3) + "||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 4) + "|| Word was " + gameWord.toUpperCase() + "                            \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 5) + "||                                                                    \n");
 		if (gameNumber == 0) {
-			loseBoard.append("||                  ||                                                                    \n");			
+			loseBoard.append("||" + Sketch.getSketch(triesLeft, 6) + "||                                                                    \n");			
 		} else {
-			loseBoard.append("||                  || Current score: " + score.getScore() + "                            \n");			
+			loseBoard.append("||" + Sketch.getSketch(triesLeft, 6) + "|| Current score: " + score.getScore() + "                            \n");			
 		}
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  ||                                                                    \n");
-		loseBoard.append("||                  ||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 7) + "||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 8) + "||                                                                    \n");
+		loseBoard.append("||" + Sketch.getSketch(triesLeft, 9) + "||                                                                    \n");
 		loseBoard.append("==========================================================================================\n");
 		System.out.println(fillVoidSpace() + loseBoard.toString());
 	}
