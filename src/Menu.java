@@ -62,7 +62,7 @@ public class Menu {
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 1) + "||                                                                    \n");
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 2) + "||     ********************** YOU WON!!!! **********************      \n");
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 3) + "||                                                                    \n");
-		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 4) + "|| You found " + gameWord + " in " + (10 - triesLeft) + " tries.      \n");
+		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 4) + "|| You found " + gameWord + " in " + (11 - triesLeft) + " tries.      \n");
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 5) + "||                                                                    \n");
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 6) + "|| Your score: " + score.getScore() + "                               \n");
 		victoryBoard.append("||" + Sketch.getSketch(triesLeft, 7) + "||                                                                    \n");
